@@ -3,7 +3,7 @@
 <!-- PROJECT SHIELDS -->
 <div align="center">
 
-[![Persian Documentation](https://img.shields.io/badge/مستندات-فارسی-green.svg?style=for-the-badge)](README_FA.md)
+[![Persian Documentation](https://img.shields.io/badge/مستندات-فارسی-green.svg?style=for-the-badge)](#persian-documentation)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 [![Rust Version](https://img.shields.io/badge/Rust-2021_Edition-DEA584.svg?style=for-the-badge&logo=rust&logoColor=white)](https://www.rust-lang.org/)
 [![Algorithm](https://img.shields.io/badge/FFT-Cooley--Tukey_Radix--2-blue.svg?style=for-the-badge)](https://github.com/ArdavanGhal-Eh/vibration-bearing-diagnostics-rust)
@@ -51,6 +51,7 @@
     <li><a href="#-roadmap--future-enhancements">Roadmap & Future Enhancements</a></li>
     <li><a href="#-contributing--license">Contributing & License</a></li>
     <li><a href="#-author--contact">Author & Contact</a></li>
+    <li><a href="#persian-documentation"><b>🇮🇷 مستندات جامع مهندسی به زبان فارسی (Persian Documentation)</b></a></li>
   </ol>
 </details>
 
@@ -311,3 +312,195 @@ Distributed under the **MIT License**. See `LICENSE` for details.
 - **Profile:** [github.com/ArdavanGhal-Eh](https://github.com/ArdavanGhal-Eh)
 
 <p align="right">(<a href="#readme-top">Back to top ↑</a>)</p>
+
+---
+---
+
+<a id="persian-documentation"></a>
+
+# 🇮🇷 بخش ۲: مستندات جامع مهندسی به زبان فارسی (Persian Documentation)
+
+<div align="center">
+  <a href="#readme-top"><strong>بازگشت به ابتدای مستندات انگلیسی (Back to Top / English) ↑</strong></a>
+</div>
+
+<br />
+
+# ⚙️ موتور عیب‌یابی ارتعاشاتی لبه شبکه و پایش سلامت بیرینگ (Rust)
+### *تحلیل طیفی با تبدیل فوریه سریع، شناسایی فرکانس‌های نقص کینماتیکی بیرینگ و ممیزی ارتعاشات بر اساس ISO 10816*
+
+<p align="center">
+  <b>یک موتور بلادرنگ و قطعی برای تحلیل ارتعاشات ماشین‌آلات دوار و نگهداری پیش‌بینانه در زبان راست. مجهز به تبدیل فوریه سریع درجا Radix-2 بدون تخصیص حافظه، پنجره‌گذاری طیفی، تطبیق دقیق فرکانس‌های نقص هندسی بیرینگ (BPFO, BPFI, BSF, FTF) و شاخص‌های آماری زمانی حوزه ارتعاش (کرتوسیس، ضریب قله، چولگی، RMS) منطبق بر استاندارد بین‌المللی ISO 10816-3.</b>
+  <br /><br />
+  <a href="#-پایپلاین-پایش-سلامت-ارتعاشی"><strong>معماری پایپ‌لاین »</strong></a>
+  &nbsp;•&nbsp;
+  <a href="#-معادلات-کینماتیکی-نقص-بیرینگ"><strong>روابط کینماتیکی بیرینگ »</strong></a>
+  &nbsp;•&nbsp;
+  <a href="#-راهنمای-نصب-و-اجرای-سریع"><strong>راهنمای اجرا »</strong></a>
+  &nbsp;•&nbsp;
+  <a href="README.md"><strong>English Version (README.md) »</strong></a>
+</p>
+
+</div>
+
+---
+
+<!-- فهرست مطالب -->
+<details open>
+  <summary><h2 style="display: inline-block;">📑 فهرست مطالب</h2></summary>
+  <ol>
+    <li><a href="#-طرح-مسئله-و-اهمیت-عیبیابی-صنعتی">طرح مسئله و اهمیت عیب‌یابی صنعتی</a></li>
+    <li><a href="#-قابلیتهای-کلیدی-سیستم">قابلیت‌های کلیدی سیستم</a></li>
+    <li><a href="#-پایپلاین-پایش-سلامت-ارتعاشی">پایپ‌لاین پایش سلامت ارتعاشی</a></li>
+    <li><a href="#-معادلات-کینماتیکی-نقص-بیرینگ">معادلات کینماتیکی نقص بیرینگ</a></li>
+    <li><a href="#-شاخصهای-آماری-حوزه-زمان">شاخص‌های آماری حوزه زمان</a></li>
+    <li><a href="#-ساختار-پروژه">ساختار پروژه</a></li>
+    <li><a href="#-بنچمارکهای-زمانی">بنچمارک‌های زمانی</a></li>
+    <li><a href="#-راهنمای-نصب-و-اجرای-سریع">راهنمای نصب و اجرای سریع</a></li>
+    <li><a href="#-نمونه-گزارش-خروجی-تله‌متری">نمونه گزارش خروجی تله‌متری</a></li>
+    <li><a href="#-پدیدآورنده">پدیدآورنده</a></li>
+  </ol>
+</details>
+
+---
+
+## 📌 طرح مسئله و اهمیت عیب‌یابی صنعتی
+
+در تجهیزات دوار صنعتی سنگین (توربین‌ها، الکتروموتورهای فشار قوی، پمپ‌های سانتریفیوژ و گیربکس‌ها)، خرابی یاتاقان‌های غلتشی عامل **بیش از ۴۵ درصد از توقف‌های ناخواسته خطوط تولید** است:
+1. **امضای اولیه عیب:** پوسته‌پوسته شدن (Spalling) میکرومتری در شیار ساچمه‌ها باعث ایجاد ضربه‌های پریودیک فوق‌العاده کوتاه می‌شود که زیر نویز پهن‌باند ارتعاشات دستگاه پنهان می‌ماند.
+2. **محدودیت‌های سخت‌افزارهای لبه (Edge Computing):** ارسال سیگنال خام ارتعاشات چند کیلوهرتزی به فضای ابری باعث هزینه‌های سنگین شبکه می‌شود. میکروکنترلرها و کامپیوترهای صنعتی لبه نیازمند الگوریتم‌های فوق‌سریع در زبان‌های بدون GC مانند Rust هستند تا طیف فرکانسی را در چند میکروثانیه استخراج کنند.
+3. **دقت فرکانسی در هارمونیک‌ها:** تفکیک عیب شیار داخلی از شیار خارجی نیازمند فرمول‌بندی سینماتیکی دقیق بر اساس قطر ساچمه، قطر گام، زاویه تماس و سرعت دورانی شفت است.
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+---
+
+## ✨ قابلیت‌های کلیدی سیستم
+
+- ⚡ **تبدیل فوریه سریع درجا Cooley-Tukey Radix-2:** الگوریتم معکوس‌سازی بیتی با شبکه‌های پروانه‌ای که تبدیل ۴۰۹۶ نقطه‌ای را در **کمتر از ۴۵ میکروثانیه** و با صفر بایت تخصیص پویا اجرا می‌کند.
+- 🪟 **پنجره‌گذاری طیفی (Windowing):** حذف پدیده نشت طیفی با پنجره‌های هنینگ، همینگ و بلکمن.
+- 🎯 **استخراج فرکانس‌های مشخصه عیب بیرینگ:**
+  - **BPFO:** فرکانس عبور ساچمه از شیار خارجی (Ball Pass Frequency Outer Race)
+  - **BPFI:** فرکانس عبور ساچمه از شیار داخلی (Ball Pass Frequency Inner Race)
+  - **BSF:** فرکانس چرخش خود ساچمه حول محورش (Ball Spin Frequency)
+  - **FTF:** فرکانس گردش قفسه نگهدارنده ساچمه‌ها (Fundamental Train Frequency)
+- 📊 **شاخص‌های آماری حوزه زمان:** گشتاورهای آماری مرتبه بالا شامل کرتوسیس (کشیدگی $\text{Kurtosis} > 3.5$ نشان‌دهنده ضربات اولیه‌ست)، ضریب قله (Crest Factor) و مقدار موثر (RMS).
+- 📜 **ممیزی شدت ارتعاشات بر پایه ISO 10816-3:** رده‌بندی خودکار وضعیت مکانیکی (خوب، رضایت‌بخش، غیرقابل قبول، خطرناک).
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+---
+
+## 🏗️ پایپ‌لاین پایش سلامت ارتعاشی
+
+```text
+┌────────────────────────────────────────────────────────────────────────┐
+│                   سیگنال ارتعاشی خام شتاب‌سنج پیزوالکتریک              │
+│                     x(t) با فرکانس نمونه‌برداری f_s                    │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│                محاسبه شاخص‌های آماری حوزه زمان (Rust)                  │
+│             - مقدار موثر RMS سرعت / شتاب                               │
+│             - ضریب کشیدگی کرتوسیس (نشانگر پالس‌های ضربه)               │
+│             - ضریب قله (Crest Factor) و چولگی                          │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│               پنجره‌گذاری و تبدیل فوریه سریع Radix-2                   │
+│             - پنجره‌گذاری هنینگ / بلکمن                                │
+│             - الگوریتم پروانه‌ای درجا (In-Place Bit-Reversal)          │
+│             - استخراج چگالی طیفی توان (PSD)                            │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│               تطبیق پیک‌های طیف با فرکانس‌های کینماتیکی بیرینگ         │
+│          هندسه بیرینگ (n, d, D, α) + سرعت شفت f_r                      │
+│          محاسبه انرژی در هارمونیک‌های BPFO، BPFI، BSF و FTF            │
+└───────────────────────────────────┬────────────────────────────────────┘
+                                    │
+                                    ▼
+┌────────────────────────────────────────────────────────────────────────┐
+│              گزارش وضعیت و تعیین شدت خرابی مطابق ISO 10816-3           │
+│                 هشدار سلامت: [عادی | نیاز به بازرسی | هشدار خطر]       │
+└────────────────────────────────────────────────────────────────────────┘
+```
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+---
+
+## 📐 معادلات کینماتیکی نقص بیرینگ
+
+با داشتن قطر گام بیرینگ $D$، قطر ساچمه $d$، تعداد ساچمه‌ها $n$، زاویه تماس $\alpha$ و سرعت چرخش شفت $f_r$ (برحسب هرتز):
+
+$$
+\begin{aligned}
+\text{BPFO} &= \frac{n}{2} f_r \left( 1 - \frac{d}{D} \cos\alpha \right) \\
+\text{BPFI} &= \frac{n}{2} f_r \left( 1 + \frac{d}{D} \cos\alpha \right) \\
+\text{BSF}  &= \frac{D}{2 d} f_r \left[ 1 - \left( \frac{d}{D} \cos\alpha \right)^2 \right] \\
+\text{FTF}  &= \frac{1}{2} f_r \left( 1 - \frac{d}{D} \cos\alpha \right)
+\end{aligned}
+$$
+
+### شاخص‌های آماری حوزه زمان
+برای نمونه‌های گسسته $x_1, \dots, x_N$ با میانگین $\bar{x}$:
+
+$$\text{RMS} = \sqrt{\frac{1}{N} \sum_{i=1}^N x_i^2}, \quad \text{Kurtosis} = \frac{\frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})^4}{\left(\frac{1}{N} \sum_{i=1}^N (x_i - \bar{x})^2\right)^2}, \quad \text{Crest Factor} = \frac{\max |x_i|}{\text{RMS}}$$
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+---
+
+## 📊 بنچمارک‌های زمانی
+
+| اندازه تبدیل ($N$) | فرکانس نمونه‌برداری | زمان اجرای FFT | تخصیص حافظه |
+| :--- | :--- | :--- | :--- |
+| **$N = 1024$** | $10\text{ kHz}$ | `9.4 µs` | ۰ بایت Heap |
+| **$N = 2048$** | $20\text{ kHz}$ | `20.1 µs` | ۰ بایت Heap |
+| **$N = 4096$** | $40\text{ kHz}$ | `44.8 µs` | ۰ بایت Heap |
+| **$N = 8192$** | $50\text{ kHz}$ | `98.6 µs` | ۰ بایت Heap |
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+---
+
+## 🚀 راهنمای نصب و اجرای سریع
+
+```bash
+# کلون مخزن
+git clone https://github.com/ArdavanGhal-Eh/vibration-bearing-diagnostics-rust.git
+cd vibration-bearing-diagnostics-rust
+
+# کامپایل بهینه حالت Release
+cargo build --release
+
+# اجرای آزمون و بنچمارک تحلیلی
+cargo run --release
+
+# اجرای اسکریپت مصورسازی پایتون
+cd python_visualizer
+pip install -r requirements.txt
+python plot_vibration_spectrum.py
+```
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+---
+
+## 👤 پدیدآورنده
+
+**اردوان قلعه**  
+*دانشکده مهندسی مکانیک، دانشگاه صنعتی شریف*  
+- **گیت‌هاب:** [@ArdavanGhal-Eh](https://github.com/ArdavanGhal-Eh)
+
+<p align="right">(<a href="#readme-top">بازگشت به بالا ↑</a>)</p>
+
+<br />
+
+<div align="center">
+  <a href="#readme-top"><strong>بازگشت به ابتدای صفحه (Back to Top) ↑</strong></a>
+</div>
