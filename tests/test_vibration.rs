@@ -1,5 +1,5 @@
 use std::f64::consts::PI;
-use vibration_bearing_diagnostics_rust::{
+use vibration_diagnostics::{
     BearingGeometry, BearingKinematics, FftProcessor, VibrationDiagnostics,
 };
 
