@@ -9,6 +9,7 @@ pub struct Complex {
     pub im: f64,
 }
 
+#[allow(clippy::should_implement_trait)]
 impl Complex {
     pub fn new(re: f64, im: f64) -> Self {
         Self { re, im }

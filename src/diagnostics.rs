@@ -71,9 +71,12 @@ impl VibrationDiagnostics {
             let max_idx = (max_f / freq_resolution_hz).ceil() as usize;
 
             let mut max_mag = 0.0;
-            for i in min_idx..=max_idx.min(spectrum.len() - 1) {
-                if spectrum[i] > max_mag {
-                    max_mag = spectrum[i];
+            let end_idx = (max_idx + 1).min(spectrum.len());
+            if min_idx < end_idx {
+                for &val in &spectrum[min_idx..end_idx] {
+                    if val > max_mag {
+                        max_mag = val;
+                    }
                 }
             }
             max_mag
