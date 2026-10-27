@@ -41,7 +41,7 @@ def plot_bearing_vibration_analysis():
 
     # 2. FFT Spectrum with Bearing Fault Markers
     ax2.plot(freqs, spectrum, color='darkslategray', linewidth=1.2, label='Vibration Power Spectrum')
-    
+
     # Fault lines
     ax2.axvline(bpfi, color='red', linestyle='--', linewidth=1.6, label=f'BPFI Harmonic 1X ({bpfi:.1f} Hz)')
     ax2.axvline(2 * bpfi, color='darkred', linestyle=':', linewidth=1.4, label=f'BPFI Harmonic 2X ({2*bpfi:.1f} Hz)')
